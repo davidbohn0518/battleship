@@ -9,7 +9,7 @@ possible_columns = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 possible_rows = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
 
 
-def direction_check(position: str) -> list:
+def direction_check(position: str, ship: str) -> list:
     directions = ["north", "south", "east", "west"]
     for char in position:
         if possible_rows.index(position[0].lower()) - ships[ship] < 0:
@@ -24,30 +24,31 @@ def direction_check(position: str) -> list:
     return directions
 
 
-def set_ships(player):
+def set_ships(player: int) -> list:
+    ships = []
     direction = "-"
     for ship in ships:
         print(f'Player {player} Please set your {ship}!')
         position = get_position()
-        available_directions = direction_check(position)
+        available_directions = direction_check(position, ship)
         while direction not in available_directions:
             print(available_directions)
             direction = input(print(f'choose a direction for your {ship}: '))
             if direction == 'north':
                 pass
             elif direction == 'east':
-                # for columns in possible_columns[possible_columns.index(position[1]):(ships[ship])]:
-                #     p1_ships.append(position[0].lower() + columns)
+                for columns in possible_columns[possible_columns.index(position[1]):(ships[ship])]:
+                    ships.append(position[0].lower() + columns)
                 pass
             elif direction == 'south':
-                # for rows in possible_rows[possible_rows.index(position[0].lower()):(ships[ship]+1)]:
-                #     p1_ships.append(rows + position[1])
+                for rows in possible_rows[possible_rows.index(position[0].lower()):(ships[ship]+1)]:
+                    ships.append(rows + position[1])
                 pass
             elif direction == 'west':
                 pass
             else:
                 print(f"please choose a valid direction for your {ship}")
-
+    return ships
 
 def get_position() -> str:
     row = "-"
@@ -65,7 +66,7 @@ def get_position() -> str:
         if column not in possible_columns:
             print("Invalid selection, Please enter a valid column")
 
-    target = row.upper() + column
+    target = row.lower() + column
     return target
 
 
@@ -96,9 +97,9 @@ def main():
     p1_guesses = []
     p2_guesses = []
 
-    set_ships(player)
+    p1_ships = set_ships(player)
     switch_player(player)
-    set_ships(player)
+    p2_ships = set_ships(player)
     switch_player(player)
     while True:
         while player == 1:
@@ -115,7 +116,7 @@ def main():
                 switch_player(player)
             else:
                 print("Captain! You have already shot there! Choose another target!")
-        if player == 2:
+        while player == 2:
             print(f'Player {player} cannons are loaded! Where would you like to shoot?: ')
             shot = get_position()
             if shot not in p2_guesses:
@@ -132,6 +133,8 @@ def main():
 
 # position = "B1"
 # ship = 'battleship'
+#
+# print(ships[ship])
 #
 #
 # directions = ["north", "south", "east", "west"]
